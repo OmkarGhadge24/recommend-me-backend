@@ -10,6 +10,7 @@ def scrape_meesho(query):
     url = f'https://www.meesho.com/search?q={query}'
     
     options = webdriver.ChromeOptions()
+    options.binary_location = "/usr/bin/google-chrome"
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')

@@ -10,6 +10,7 @@ def scrape_zepto(query):
     url = f'https://www.zeptonow.com/search?query={query}'
     
     options = webdriver.ChromeOptions()
+    options.binary_location = "/usr/bin/google-chrome"
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')

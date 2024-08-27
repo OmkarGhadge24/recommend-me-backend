@@ -8,7 +8,9 @@ from bs4 import BeautifulSoup
 
 def scrape_amazon(query):
     url = f'https://www.amazon.in/s?k={query}'
+    
     options = webdriver.ChromeOptions()
+    options.binary_location = "/usr/bin/google-chrome"
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
