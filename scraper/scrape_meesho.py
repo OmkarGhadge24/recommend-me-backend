@@ -5,12 +5,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
+import os
 
 def scrape_meesho(query):
     url = f'https://www.meesho.com/search?q={query}'
     
     options = webdriver.ChromeOptions()
-    options.binary_location = "/usr/bin/google-chrome"
+    options.binary_location = os.path.abspath('./chrome-linux/chrome')
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
