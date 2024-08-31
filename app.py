@@ -36,9 +36,8 @@ def scrape():
     elif category == 'Cosmetics':
         print("Scraping cosmetics category")
         products += scrape_nykaa(query)
-        products += scrape_snapdeal(query)
     elif category == 'Grocery':
-        print("Scraping Grocery category")
+        print("Scraping grocery category")
         products += scrape_zepto(query)
         products += scrape_amazon(query)
     else:
