@@ -35,10 +35,10 @@ def scrape_zepto(query):
     product_elements = soup.find_all('a', class_='!p-2 relative my-3 mb-9 rounded-t-xl rounded-b-md product-card_product-card-wrap__Wo0Nb')
     
     for element in product_elements:
-        if len(products) >= 5:
+        if len(products) >= 10:
             break
 
-        name, price, image = None, None, 'Image not available'
+        name, price, image, link = None, None, 'Image not available', None
 
         name_tag = element.find('h5', class_='font-norms block typography_h5__UTaxj typography_line-clamp-2__oj8Jo !text-base !font-semibold !h-9 !tracking-normal px-1.5')
         if name_tag:
@@ -52,8 +52,12 @@ def scrape_zepto(query):
         if img_tag:
             image = img_tag.get('src', 'Image not available')
 
+        link_tag = element.get('href')
+        if link_tag:
+            link = f'https://www.zeptonow.com{link_tag}'  # Construct the full URL
+
         if name and price:
-            products.append({'name': name, 'price': price, 'image': image, 'via': 'Zepto'})
+            products.append({'name': name, 'price': price, 'image': image, 'link': link, 'via': 'Zepto'})
 
     return products
 

@@ -38,8 +38,12 @@ def scrape_meesho(query):
         if len(products) >= 5:
             break
 
-        name, price, image = None, None, 'Image not available'
+        name, price, image, link = None, None, 'Image not available', None
 
+        link_tag = element.find('a', href=True)
+        if link_tag:
+            link = "https://www.meesho.com" + link_tag['href']
+        
         name_div = element.find('div', class_='NewProductCardstyled__ProductHeaderWrapper-sc-6y2tys-30 gspQJ')
         if name_div:
             name_tag = name_div.find('p', class_='sc-eDvSVe gQDOBc NewProductCardstyled__StyledDesktopProductTitle-sc-6y2tys-5 ejhQZU NewProductCardstyled__StyledDesktopProductTitle-sc-6y2tys-5 ejhQZU')
@@ -54,12 +58,13 @@ def scrape_meesho(query):
         if img_tag:
             image = img_tag.get('src', 'Image not available')
 
-        if name and price:
-            products.append({'name': name, 'price': price, 'image': image, 'via': 'Meesho'})
+        if name and price and link:
+            products.append({'name': name, 'price': price, 'image': image, 'link': link, 'via': 'Meesho'})
 
     return products
 
 # if __name__ == "__main__":
-#     query = 'shoes for men'
+#     query = 'tshirt for men'
 #     products = scrape_meesho(query)
 #     print(products)
+    

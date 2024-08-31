@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import re
 
 def scrape_snapdeal(query):
     headers = {
@@ -25,6 +26,9 @@ def scrape_snapdeal(query):
                 price_tag = item.find('div', class_='product-price-row')
                 discounted_price_tag = price_tag.find('span', class_='product-price') if price_tag else None
                 discounted_price = discounted_price_tag.text.strip() if discounted_price_tag else 'No price available'
+                
+                # Extract numeric price
+                numeric_price = re.sub(r'[^\d]', '', discounted_price)
 
                 img_tag = item.find('img', class_='product-image')
                 if img_tag:
@@ -35,8 +39,12 @@ def scrape_snapdeal(query):
                     image_tag = item.find('input', class_='compareImg')
                     image = image_tag.get('value', 'Image not available') if image_tag else 'Image not available'
 
-                if name and discounted_price and image:
-                    products.append({'name': name, 'price': discounted_price, 'image': image, 'via': 'Snapdeal'})
+                link_tag = item.find('a', class_='dp-widget-link')
+                link = link_tag.get('href', 'Link not available') if link_tag else 'Link not available'
+                link = f"https://www.snapdeal.com{link}"  # Correct link format
+
+                if name and numeric_price and image and link:
+                    products.append({'name': name, 'price': numeric_price, 'image': image, 'link': link, 'via': 'Snapdeal'})
                     if len(products) == 5:
                         return products
             except AttributeError:
@@ -45,6 +53,6 @@ def scrape_snapdeal(query):
     return products
 
 # if __name__ == "__main__":
-#     query = "kitchen product"
+#     query = "shirt for men"
 #     products = scrape_snapdeal(query)
 #     print(products)

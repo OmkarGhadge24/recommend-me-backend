@@ -34,10 +34,10 @@ def scrape_amazon(query):
     product_elements = soup.find_all('div', {'data-component-type': 's-search-result'})
     
     for element in product_elements:
-        if len(products) >= 5:
+        if len(products) >= 10:
             break
 
-        name, price, image = None, None, 'Image not available'
+        name, price, image, link = None, None, 'Image not available', 'Link not available'
 
         name_tag = element.find('span', class_='a-text-normal')
         if name_tag:
@@ -53,11 +53,23 @@ def scrape_amazon(query):
         if img_tag:
             image = img_tag.get('src', 'Image not available')
 
-        if name and price:
-            products.append({'name': name, 'price': price, 'image': image, 'via': 'Amazon'})
+        link_tag = element.find('a', class_='a-link-normal', href=True)
+        if link_tag:
+            link = 'https://www.amazon.in' + link_tag['href']
+
+        if name and price and link:
+            products.append({
+                'name': name,
+                'price': price,
+                'image': image,
+                'link': link,
+                'via': 'Amazon'
+            })
+    
     return products
 
 # if __name__ == "__main__":
 #     query = 'sony camera'
 #     products = scrape_amazon(query)
-#     print(products)
+#     for product in products:
+#         print(product)

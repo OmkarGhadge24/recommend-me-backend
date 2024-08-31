@@ -34,10 +34,10 @@ def scrape_nykaa(query):
     product_elements = soup.find_all('div', class_='productWrapper')
     
     for element in product_elements:
-        if len(products) >= 5:
+        if len(products) >= 10:
             break
 
-        name, price, image = None, None, 'Image not available'
+        name, price, image, link = None, None, None, None
 
         name_tag = element.find('div', class_='css-xrzmfa')
         if name_tag:
@@ -49,14 +49,20 @@ def scrape_nykaa(query):
         
         img_tag = element.find('img', class_='css-11gn9r6')
         if img_tag:
-            image = img_tag.get('src', 'Image not available')
+            image = img_tag.get('src', None)
+        
+        link_tag = element.find('a', class_='css-qlopj4')
+        if link_tag:
+            link = link_tag.get('href')
+            if link:
+                link = f'https://www.nykaa.com{link}'
 
-        if name and price:
-            products.append({'name': name, 'price': price, 'image': image, 'via': 'Nykaa'})
+        if name and price and image and link:
+            products.append({'name': name, 'price': price, 'image': image, 'link': link, 'via': 'Nykaa'})
 
     return products
 
-# if __name__ == "__main__":
-#     query = 'vitamin c serum'
-#     products = scrape_nykaa(query)
-#     print(products)
+if __name__ == "__main__":
+    query = 'vitamin c serum'
+    products = scrape_nykaa(query)
+    print(products)

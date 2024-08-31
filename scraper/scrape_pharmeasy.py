@@ -14,31 +14,41 @@ def scrape_pharmeasy(query):
     soup = BeautifulSoup(response.text, 'html.parser')
     products = []
 
-    container_class = 'Search_medicineLists__hM5Hk'
+    container_class = 'ProductCard_medicineUnitContainer__cBkHl'
     name_class = 'ProductCard_medicineName__8Ydfq'
     price_class = 'ProductCard_ourPrice__yDytt'
     image_class = 'ProductCard_productImage__dq5lq'
-
+    
     for item in soup.find_all('div', class_=container_class):
         try:
             name_tag = item.find('h1', class_=name_class)
             price_tag = item.find('div', class_=price_class)
             image_tag = item.find('img', class_=image_class)
+            link_tag = item.find('a', href=True)
 
             name = name_tag.text if name_tag else 'No name available'
-            price = price_tag.text if price_tag else 'No price available'
+            price = price_tag.text.strip() if price_tag and '₹' in price_tag.text else None
             image = image_tag['src'] if image_tag else 'Image not available'
+            product_link = f"https://pharmeasy.in{link_tag['href']}" if link_tag else 'No link available'
 
-            if name and price and image:
-                products.append({'name': name, 'price': price, 'image': image, 'via': 'PharmEasy'})
-                if len(products) == 5:
-                    return products
+            if price:  # Ensure price is not None or empty
+                products.append({
+                    'name': name,
+                    'price': price,
+                    'image': image,
+                    'link': product_link,
+                    'via': 'PharmEasy'
+                })
+
+            if len(products) == 10:
+                return products
+
         except AttributeError:
             continue
 
     return products
 
 # if __name__ == "__main__":
-#     query = "paracetemol"
+#     query = "paracetamol"
 #     products = scrape_pharmeasy(query)
 #     print(products)

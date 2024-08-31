@@ -34,10 +34,10 @@ def scrape_netmeds(query):
     product_elements = soup.find_all('div', class_='cat-item')
     
     for element in product_elements:
-        if len(products) >= 5:
+        if len(products) >= 10:
             break
 
-        name, price, image = None, None, 'Image not available'
+        name, price, image, link = None, None, 'Image not available', None
 
         name_tag = element.find('h3', class_='clsgetname')
         if name_tag:
@@ -50,13 +50,19 @@ def scrape_netmeds(query):
         img_tag = element.find('img', class_='product-image-photo')
         if img_tag:
             image = img_tag.get('src', 'Image not available')
+        
+        link_tag = element.find('a', class_='category_name')
+        if link_tag:
+            link = link_tag.get('href', None)
+            if link:
+                link = 'https://www.netmeds.com' + link
 
         if name and price:
-            products.append({'name': name, 'price': price, 'image': image, 'via': 'Netmeds'})
+            products.append({'name': name, 'price': price, 'image': image, 'link': link, 'via': 'Netmeds'})
 
     return products
 
 # if __name__ == "__main__":
-#     query = 'cough syrup'
+#     query = 'paracetemol'
 #     products = scrape_netmeds(query)
 #     print(products)
