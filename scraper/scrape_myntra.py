@@ -5,9 +5,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
+import urllib.parse
 
-def scrape_meesho(query):
-    url = f'https://www.meesho.com/search?q={query}'
+def scrape_myntra(query):
+    encoded_query = urllib.parse.quote(query)
+    url = f'https://www.myntra.com/{encoded_query}?rawQuery={encoded_query}'
     
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
@@ -20,7 +22,7 @@ def scrape_meesho(query):
     
     try:
         WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, 'div.sc-dkrFOg.ProductList__GridCol-sc-8lnc8o-0.cokuZA.eCJiSA'))
+            EC.presence_of_element_located((By.CLASS_NAME, 'product-base'))
         )
     except Exception as e:
         print(f"Error: {e}")
@@ -32,25 +34,28 @@ def scrape_meesho(query):
 
     products = []
 
-    product_elements = soup.find_all('div', {'class': 'sc-dkrFOg ProductList__GridCol-sc-8lnc8o-0 cokuZA eCJiSA'})
+    product_elements = soup.find_all('li', class_='product-base')
     
     for element in product_elements:
-        if len(products) >= 5:
+        if len(products) >= 10:
             break
 
-        name, price, image, link = None, None, 'Image not available', None
+        price, image, link = None, 'Image not available', None
+        brand, name = None, None
 
         link_tag = element.find('a', href=True)
         if link_tag:
-            link = "https://www.meesho.com" + link_tag['href']
+            link = "https://www.myntra.com" + link_tag['href']
         
-        name_div = element.find('div', class_='NewProductCardstyled__ProductHeaderWrapper-sc-6y2tys-32 knWeEt')
-        if name_div:
-            name_tag = name_div.find('p', class_='sc-eDvSVe gQDOBc NewProductCardstyled__StyledDesktopProductTitle-sc-6y2tys-5 ejhQZU NewProductCardstyled__StyledDesktopProductTitle-sc-6y2tys-5 ejhQZU')
-            if name_tag:
-                name = name_tag.text.strip()
+        brand_tag = element.find('h3', class_='product-brand')
+        if brand_tag:
+            brand = brand_tag.text.strip()
         
-        price_tag = element.find('h5', class_='sc-eDvSVe dwCrSh')
+        name_tag = element.find('h4', class_='product-product')
+        if name_tag:
+            name = name_tag.text.strip()
+        
+        price_tag = element.find('span', class_='product-discountedPrice')
         if price_tag:
             price = price_tag.text.strip()
         
@@ -58,13 +63,24 @@ def scrape_meesho(query):
         if img_tag:
             image = img_tag.get('src', 'Image not available')
 
-        if name and price and link:
-            products.append({'name': name, 'price': price, 'image': image, 'link': link, 'via': 'Meesho'})
+        # Combine brand and product name
+        if brand and name:
+            combined_name = f"{brand} - {name}"
+        else:
+            combined_name = name or brand or "Name not available"
+
+        if price and link:
+            products.append({
+                'name': combined_name,
+                'price': price,
+                'image': image,
+                'link': link,
+                'via': 'Myntra'
+            })
 
     return products
 
 # if __name__ == "__main__":
-#     query = 'tshirt for men'
-#     products = scrape_meesho(query)
+#     query = 'kurta for boys'
+#     products = scrape_myntra(query)
 #     print(products)
-    

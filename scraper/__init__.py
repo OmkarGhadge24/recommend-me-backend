@@ -6,6 +6,8 @@ from .scrape_meesho import scrape_meesho
 from .scrape_snapdeal import scrape_snapdeal
 from .scrape_netmeds import scrape_netmeds
 from .scrape_zepto import scrape_zepto
+from .scrape_jiomart import scrape_jiomart
+from .scrape_myntra import scrape_myntra
 
 __all__ = [
     "scrape_flipkart",
@@ -15,5 +17,7 @@ __all__ = [
     "scrape_meesho",
     "scrape_snapdeal",
     "scrape_netmeds",
-    "scrape_zepto"
+    "scrape_zepto",
+    "scrape_jiomart",
+    "scrape_myntra"
 ]

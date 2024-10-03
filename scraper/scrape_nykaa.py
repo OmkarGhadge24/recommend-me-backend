@@ -62,7 +62,7 @@ def scrape_nykaa(query):
 
     return products
 
-if __name__ == "__main__":
-    query = 'vitamin c serum'
-    products = scrape_nykaa(query)
-    print(products)
+# if __name__ == "__main__":
+#     query = 'vitamin c serum'
+#     products = scrape_nykaa(query)
+#     print(products)
