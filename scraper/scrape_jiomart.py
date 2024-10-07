@@ -15,7 +15,8 @@ def scrape_jiomart(query):
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     url = f"https://www.jiomart.com/search/{query}"
     driver.get(url)
-
+    time.sleep(3)
+    
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     driver.quit()
 
