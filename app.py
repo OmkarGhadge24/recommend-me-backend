@@ -1,4 +1,7 @@
 from flask import Flask, request, jsonify
+import firebase_admin
+from firebase_admin import credentials
+
 from scraper import (
     scrape_flipkart,
     scrape_amazon,
@@ -14,12 +17,19 @@ from scraper import (
 
 app = Flask(__name__)
 
+# Path to the Firebase service account JSON file
+cred = credentials.Certificate('./recommend-me-6969-firebase-adminsdk.json')  
+firebase_admin.initialize_app(cred)
+
 @app.route('/api/scrape', methods=['GET'])
 def scrape():
     query = request.args.get('query')
     category = request.args.get('category')
     products = []
-    
+
+    if not query or not category:
+        return jsonify({"message": "Missing query or category parameter"}), 400
+
     if category == 'Clothes':
         print("Scraping clothes category")
         products += scrape_flipkart(query)
@@ -49,6 +59,7 @@ def scrape():
         products += scrape_flipkart(query)
         products += scrape_snapdeal(query)
         products += scrape_meesho(query)
+
     return jsonify(products)
 
 if __name__ == '__main__':
