@@ -58,12 +58,13 @@ def scrape_myntra(query):
         price_tag = element.find('span', class_='product-discountedPrice')
         if price_tag:
             price = price_tag.text.strip()
-        
-        img_tag = element.find('img', {'alt': True})
-        if img_tag:
-            image = img_tag.get('src', 'Image not available')
 
-        # Combine brand and product name
+        picture_tag = element.find('picture')
+        if picture_tag:
+            source_tag = picture_tag.find('source')
+            if source_tag:
+                image = source_tag.get('srcset', 'Image not available')
+
         if brand and name:
             combined_name = f"{brand} - {name}"
         else:
@@ -80,7 +81,7 @@ def scrape_myntra(query):
 
     return products
 
-# if __name__ == "__main__":
-#     query = 'kurta for boys'
-#     products = scrape_myntra(query)
-#     print(products)
+if __name__ == "__main__":
+    query = 'kurta for boys'
+    products = scrape_myntra(query)
+    print(products)

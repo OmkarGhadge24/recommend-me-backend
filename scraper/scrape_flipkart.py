@@ -33,7 +33,7 @@ def scrape_flipkart(query):
     soup = BeautifulSoup(response.text, 'html.parser')
     products = []
     
-    container_classes = ['_75nlfW', 'CGtC98', '_75nlfW LYgYA3', '_1AtVbE', '_2kHMtA']
+    container_classes = ['_75nlfW', 'CGtC98', '_75nlfW LYgYA3', 'tUxRFH', '_1sdMkc LFEi7Z']
     name_classes = ['KzDlHZ', 'syl9yP', '_4rR01T', 'IRpwTa']
     price_classes = ['Nx9bqj _4b5DiR', 'Nx9bqj', '_30jeq3', '_1_WHN1']
     image_classes = ['DByuf4', '_53J4C-', '_396cs4', '_3exPp9']
