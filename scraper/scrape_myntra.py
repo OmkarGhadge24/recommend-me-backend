@@ -45,7 +45,7 @@ def scrape_myntra(query):
 
         link_tag = element.find('a', href=True)
         if link_tag:
-            link = "https://www.myntra.com" + link_tag['href']
+            link = "https://www.myntra.com/" + link_tag['href']
         
         brand_tag = element.find('h3', class_='product-brand')
         if brand_tag:
